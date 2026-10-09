@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#101020">
+<title>Ryanz Game</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at top,#24245a,#101020 55%);color:#fff;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:480px;padding:22px 18px 30px;text-align:center}
+.logo{font-size:13px;letter-spacing:4px;color:#a9a9ff;font-weight:800;margin-top:12px}
+h1{font-size:34px;margin:8px 0 4px} .sub{color:#c5c5dd;font-size:14px}
+.card{background:#1b1b35;border:1px solid #37375e;border-radius:22px;padding:20px;margin-top:20px;box-shadow:0 12px 35px #0004}
+.label{font-size:12px;color:#b9b9d9;letter-spacing:1.5px}
+.coins{font-size:40px;font-weight:850;margin:6px 0;color:#ffe27a}
+.tap{width:190px;height:190px;border-radius:50%;border:7px solid #ffe27a;background:linear-gradient(145deg,#ffdc58,#ff9d20);box-shadow:0 0 0 12px #ffbd2420,0 15px 28px #0005;display:block;margin:20px auto;color:#603600;font-size:72px;cursor:pointer;touch-action:manipulation;transition:transform .08s}
+.tap:active{transform:scale(.94)}button{font:inherit;font-weight:750;border:0;border-radius:13px;padding:13px 17px;cursor:pointer}.primary{background:#7777ff;color:white;width:100%}.secondary{background:#303052;color:#fff;margin-top:10px;width:100%}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.stat{background:#242444;border-radius:15px;padding:13px}.num{font-size:21px;font-weight:800;margin-top:4px}
+.note{font-size:12px;line-height:1.5;color:#aaaacb;margin:18px 8px 0}.toast{min-height:22px;color:#ffe27a;font-size:13px;margin-top:10px}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="logo">RYANZ PRESENTS</div>
+  <h1>Ryanz Game</h1>
+  <div class="sub">Tap koin • Kumpulkan poin • Main gratis</div>
+  <section class="card">
+    <div class="label">TOTAL POIN KAMU</div>
+    <div class="coins" id="coins">0 🪙</div>
+    <button class="tap" id="tap" aria-label="Tap untuk mengumpulkan koin">🪙</button>
+    <div class="sub">Ketuk koin untuk mendapatkan poin!</div>
+    <div class="toast" id="toast"></div>
+  </section>
+  <div class="stats">
+    <div class="stat"><div class="label">TAP</div><div class="num" id="taps">0</div></div>
+    <div class="stat"><div class="label">POIN PER TAP</div><div class="num">+1 🪙</div></div>
+  </div>
+  <section class="card">
+    <div style="font-weight:800;font-size:18px">🎁 Bonus Harian</div>
+    <p class="sub">Klaim bonus 10 poin sekali sehari.</p>
+    <button class="primary" id="daily">Klaim Bonus +10</button>
+    <button class="secondary" id="reset">Mulai Ulang Poin</button>
+  </section>
+  <p class="note">Catatan: poin ini hanya untuk permainan dan tidak memiliki nilai uang. Aplikasi ini belum menyediakan penarikan uang sungguhan.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let coins=Number(localStorage.getItem('ryanzCoins')||0);
+let taps=Number(localStorage.getItem('ryanzTaps')||0);
+function render(){ $('coins').textContent=coins.toLocaleString('id-ID')+' 🪙'; $('taps').textContent=taps.toLocaleString('id-ID'); localStorage.setItem('ryanzCoins',coins);localStorage.setItem('ryanzTaps',taps);}
+$('tap').addEventListener('click',()=>{coins++;taps++;render();$('toast').textContent='+1 poin!'});
+$('daily').addEventListener('click',()=>{const today=new Date().toISOString().slice(0,10);if(localStorage.getItem('ryanzDaily')===today){$('toast').textContent='Bonus hari ini sudah diklaim.';return;}coins+=10;localStorage.setItem('ryanzDaily',today);render();$('toast').textContent='Bonus +10 poin berhasil diklaim!';});
+$('reset').addEventListener('click',()=>{if(confirm('Yakin ingin menghapus semua poin?')){coins=0;taps=0;render();$('toast').textContent='Poin sudah diulang.';}});
+render();
+</script>
+</body>
+</html>
